@@ -17,8 +17,8 @@ function Nav() {
         <div>
             <ul>
                 {links.map(val =>
-                    <li>
-                        <Link key={val.to} to={val.to}>{val.text}</Link>
+                    <li key={val.to}>
+                        <Link  to={val.to}>{val.text}</Link>
                     </li>
                 )}
             </ul>
