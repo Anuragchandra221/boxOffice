@@ -2,7 +2,6 @@ import React from 'react'
 import Actor from './Actor'
 import IMG_NOT_FOUND from "../images/not_found.png"
 function ActorGrid({data}) {
-    console.log(data)
     return(
         <div>
             { data.map((val)=>{

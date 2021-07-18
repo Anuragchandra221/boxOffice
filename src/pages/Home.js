@@ -44,8 +44,8 @@ function Home() {
         if(results && results.length>0){
             return(
                 results[0].show?
-                <div className="container mt-3">
-                        <div className="row">
+                <div className="container-fluid mt-3">
+                        <div className="row d-flex justify-content-center">
                         <ShowGrid data={results}/>
                         </div>
                     </div>
