@@ -5,7 +5,7 @@ import Title from './Title'
 function MainPageLayout({children}) {
     return (
         <div>
-            <Title heading="BOX-OFFICE" subHeading="Movies And Actors" />
+            <Title heading="BOX-OFFICE" subHeading="Search for Movies And Actors?" />
             <Nav/>
             {children}
         </div>

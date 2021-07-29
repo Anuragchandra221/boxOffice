@@ -1,24 +1,54 @@
-import React,{useState,useEffect} from 'react'
+import React,{useReducer,useEffect} from 'react'
 import {useParams} from "react-router-dom"
 import {getApi} from "./misc/config"
+import ShowMainData from './show/ShowMainData'
+import Details from './show/Details'
+import Cast from './show/Cast'
+import IMG_NOT_FOUND from "./images/not_found.png"
+import Seasons from './show/Seasons'
+
 function ShowInfo() {
     const {id} = useParams()
-    const [show, setShow] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState(null)
+    const initialState = {
+        show:null,
+        isLoading:true,
+        error:true
+    }
+    function reducer(prevState, action){
+        switch(action.type){
+            case "FETCH_SUCCESS":
+                return {
+                    show:action.show,
+                    isLoading:false,
+                    error:null
+                }
+                case "FETCH_FAILED":
+                    return {
+                        ...prevState,
+                        isLoading:false,
+                        error:action.error
+                    }
+            default:
+                    return prevState
+        }
+    }
+    const [{show, isLoading, error}, dispatch] = useReducer(reducer, initialState)
     useEffect(
         ()=>{
             let isMounted=true
-            getApi(`/shows/${id}?embed[]=episodes&embed[]=cast`).then(results=>{
+            getApi(`/shows/${id}?embed[]=seasons&embed[]=cast`).then(results=>{
                 if(isMounted){
-                    setShow(results)
-                    setIsLoading(false)
+                    dispatch({
+                        type:"FETCH_SUCCESS",
+                        show:results
+                    })
                 }
-                
             }).catch(err=>{
                 if(isMounted){
-                    setError(err)
-                    setIsLoading(false)
+                    dispatch({
+                        type:"FETCH_FAILED",
+                        error:err.message
+                    })
                 }
                 
             })
@@ -41,14 +71,27 @@ function ShowInfo() {
     if(show!=null){
         return(
             <div>
-            {
-                show.name
-            }
+            <ShowMainData image={show.image?show.image.medium:IMG_NOT_FOUND} name={show.name} rating={show.rating} summary={show.summary} tags={show.genres}  />
+            <div>
+                <h2>
+                    Details
+                </h2>
+                <Details status={show.status} network={show.network?show.network:false} premiered={show.premiered} />
+            </div>
+            <div>
+                <h2>
+                    Seasons
+                </h2>
+                <Seasons seasons={show._embedded.seasons} />
+            </div>
+            <div>
+                <h2>
+                    Cast
+                </h2>
+                <Cast cast={show._embedded.cast}/>
+            </div>
         </div>
         )
     }
-    
-    
 }
-
 export default ShowInfo

@@ -1,7 +1,7 @@
-import React from 'react'
-import {Link} from "react-router-dom"
+import React,{memo} from 'react'
+import {Link,useLocation} from "react-router-dom"
 function Nav() {
-
+    const location = useLocation()
     const links = [
         {
             to:"/",
@@ -14,16 +14,19 @@ function Nav() {
     ]
 
     return (
-        <div>
-            <ul>
+        <div className="d-flex align-items-center justify-content-center mb-3">
                 {links.map(val =>
-                    <li key={val.to}>
-                        <Link  to={val.to}>{val.text}</Link>
-                    </li>
+                    <button key={val.to} className="mx-2 button">
+                        <Link to={val.to} style={
+                            {
+                                textDecoration: "none"
+                                
+                            }
+                        } className={location.pathname===val.to?"active":"notActive"}>{val.text}</Link>
+                    </button>
                 )}
-            </ul>
         </div>
     )
 }
 
-export default Nav
+export default memo(Nav)

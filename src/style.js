@@ -5,9 +5,9 @@ export const StyledGrid = styled.div`
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    height: 800px;
+    height: 650px;
     scrollbar-width: none;
-    width: 70%;
+    width: 100%;
     overflow-y: auto;
     @media only screen and (max-width: 600px) {
         width: 100%;

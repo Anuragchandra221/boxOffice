@@ -3,6 +3,7 @@ import {Switch, Route} from "react-router-dom"
 import Home from './pages/Home';
 import Starred from './pages/Starred';
 import ShowInfo from './ShowInfo';
+import './App.css'
 
 function App() {
   return (

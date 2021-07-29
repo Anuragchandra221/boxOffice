@@ -1,14 +1,16 @@
-import React,{useState} from 'react'
+import React,{useState,useCallback} from 'react'
 import MainPageLayout from '../components/MainPageLayout'
 import { getApi } from '../misc/config'
 import ShowGrid from '../show/ShowGrid'
 import ActorGrid from '../actors/ActorGrid'
+import { useLastQuery, useWhyDidYouUpdate } from '../misc/custom-hooks'
 
 function Home() {
-    const [input, setInput] = useState("")
-    const onInputChange = (ev)=>{
+    const [input, setInput] = useLastQuery()
+
+    const onInputChange = useCallback((ev)=>{
         setInput(ev.target.value)
-    }
+    },[setInput])
     const [isShow, setIsShow] = useState(true)
     const onKeyDown = (ev)=>{
         if(ev.KeyCode === 13){
@@ -33,6 +35,8 @@ function Home() {
         }
         
     }
+    useWhyDidYouUpdate("home", { onInputChange, onkeydown })
+
     const render=()=>{
         if(results && results.length===0){
             return (
@@ -44,13 +48,19 @@ function Home() {
         if(results && results.length>0){
             return(
                 results[0].show?
-                <div className="container-fluid mt-3">
+                <div className="container mt-3">
                         <div className="row d-flex justify-content-center">
                         <ShowGrid data={results}/>
                         </div>
                     </div>
                 :
-                <ActorGrid data={results} />
+                <div className="container mt-3">
+                    <div className="row d-flex justify-content-center">
+                        <ActorGrid data={results} />
+                    </div>
+                </div>
+                
+                
             )
             
             
@@ -61,19 +71,24 @@ function Home() {
     return (
         <MainPageLayout>
 
-            
-            <input type="text" value={input} onKeyDown={onKeyDown} onChange={onInputChange} />
-            <label htmlFor="showSearch">
-                shows
-                <input id="showSearch" type="radio" checked={isShow} value="shows" onChange={radioChange}/>
+            <div className="d-flex align-items-center searchBar" >
+            <input type="text" value={input} placeholder="Search for something" className="inputBar" onKeyDown={onKeyDown} onChange={onInputChange} />
+            <div className="mt-3">
+            <label htmlFor="showSearch" className="mr-2">
+                <input id="showSearch" type="radio" checked={isShow} className="radio" value="shows" onChange={radioChange}/>
+                Shows
             </label>
             <label htmlFor="actorSearch">
+                <input id="actorSearch" type="radio" checked={!isShow} className="radio" value="people" onChange={radioChange}/>
                 Actors
-                <input id="actorSearch" type="radio" checked={!isShow} value="people" onChange={radioChange}/>
             </label>
-            <button type="button" onClick={onSearch}>Search</button>
+            </div>
+            
+            <button type="button" className="btn btn-primary" onClick={onSearch}>Search</button>
             
             {render()}
+            </div>
+            
         </MainPageLayout>
         
     )
